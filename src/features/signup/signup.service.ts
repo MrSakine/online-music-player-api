@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { SignupDTO } from 'src/dtos/signup.dto';
-import { Signup } from 'src/signup/signup.schema';
+import { Signup } from 'src/features/signup/signup.schema';
 import { Model } from 'mongoose';
 import { HashingUtils } from 'src/utils/hashing.utils';
 
@@ -20,5 +20,9 @@ export class SignupService {
 
   async findByMail(mail: string): Promise<Signup> {
     return this.signupModel.findOne({ mail: mail }).exec();
+  }
+
+  async updateData(data: Signup) {
+    return await this.signupModel.updateOne({ mail: data.mail }, data);
   }
 }
