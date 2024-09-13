@@ -8,6 +8,7 @@ export class SwaggerConfig {
       .setTitle('Online music  API')
       .setDescription('API description')
       .setVersion('1.0')
+      .addBearerAuth()
       .build();
   }
 }

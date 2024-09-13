@@ -15,7 +15,7 @@ export class HashingUtils {
     return hashedPassword;
   }
 
-  static async compare(hashedValue: string, value: string) {
+  async compare(hashedValue: string, value: string) {
     const res = await bcrypt.compare(value, hashedValue);
     return res;
   }
