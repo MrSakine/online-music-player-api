@@ -10,6 +10,8 @@ import { SharedModule } from './core/shared.module';
 import { ResetPasswordModule } from './features/reset-password/reset-password.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ProfileModule } from './features/profile/profile.module';
+import { MusicModule } from './features/music/music.module';
+import { MusicFilesUtils } from './utils/music-file.utils';
 
 @Module({
   imports: [
@@ -39,8 +41,9 @@ import { ProfileModule } from './features/profile/profile.module';
     SharedModule,
     ResetPasswordModule,
     ProfileModule,
+    MusicModule,
   ],
   controllers: [AppController],
-  providers: [AppService, SwaggerConfig],
+  providers: [AppService, SwaggerConfig, MusicFilesUtils],
 })
 export class AppModule {}

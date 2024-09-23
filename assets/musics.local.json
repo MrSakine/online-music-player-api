@@ -1,0 +1,25 @@
+{
+  "assets": {
+    "path": "/Users/filymohamedsakine/Documents/alx/online-music-player-api",
+    "albums": "assets/albums",
+    "singles": "assets/singles"
+  },
+  "albums": [
+    {
+      "key": "Niska",
+      "title": "Le monde est mechant",
+      "tracks": ["niska/"],
+      "poster": "poster.jpg",
+      "total": 18
+    }
+  ],
+  "singles": [
+    {
+      "key": "Niska",
+      "title": "M.D feat 4keus",
+      "tracks": ["md.mp3"],
+      "poster": "poster.jpg",
+      "total": 1
+    }
+  ]
+}
