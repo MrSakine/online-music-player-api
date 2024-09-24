@@ -8,6 +8,10 @@ import { MusicFilesUtils } from './utils/music-file.utils';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  });
   const swaggerConfig = app.get(SwaggerConfig);
   const configService = app.get(ConfigService);
   const musicFilesUtils = app.get(MusicFilesUtils);
