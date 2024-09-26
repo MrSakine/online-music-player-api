@@ -9,7 +9,7 @@ import { MusicFilesUtils } from './utils/music-file.utils';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
-    origin: ['http://localhost:5173', 'https://online-music-player-sand.vercel.app', 'http://85.31.237.223:3000'],
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
   });
   const swaggerConfig = app.get(SwaggerConfig);
