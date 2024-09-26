@@ -15,10 +15,7 @@ async function bootstrap() {
     },
   });
   app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'https://online-music-player-sand.vercel.app',
-    ],
+    origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     maxAge: 300,
