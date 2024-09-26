@@ -20,6 +20,8 @@ async function bootstrap() {
       'https://online-music-player-sand.vercel.app',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'authorization'],
+    maxAge: 300,
   });
   const swaggerConfig = app.get(SwaggerConfig);
   const configService = app.get(ConfigService);
