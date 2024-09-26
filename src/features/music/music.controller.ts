@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpException,
   HttpStatus,
@@ -46,7 +47,8 @@ export class MusicController {
     }
 
     const albums = await this.musicService.getAllAlbums();
-    return this.responseUtils.dataArrayResponse('All albums', albums);
+    const formattedAlbums = await this.musicService.formatAlbums(albums);
+    return this.responseUtils.dataArrayResponse('All albums', formattedAlbums);
   }
 
   @UseGuards(AuthGuard)
@@ -64,7 +66,11 @@ export class MusicController {
     }
 
     const singles = await this.musicService.getAllSingles();
-    return this.responseUtils.dataArrayResponse('All singles', singles);
+    const formattedSingles = await this.musicService.formatSingles(singles);
+    return this.responseUtils.dataArrayResponse(
+      'All singles',
+      formattedSingles,
+    );
   }
 
   @UseGuards(AuthGuard)
@@ -73,6 +79,7 @@ export class MusicController {
   @ApiBadRequestResponse({ description: 'Invalid type' })
   @ApiOkResponse({ description: 'A new stream file' })
   @HttpCode(HttpStatus.OK)
+  @Header('Content-Type', 'image/jpeg')
   async getPoster(
     @Query('type') type: string,
     @Query('name') name: string,
@@ -105,7 +112,7 @@ export class MusicController {
     }
 
     const stream = new StreamableFile(createReadStream(path), {
-      type: 'image/jpeg',
+      // type: 'image/jpeg',
       disposition: `inline; filename="${filename}"`,
     });
 
@@ -119,6 +126,7 @@ export class MusicController {
   @ApiBadRequestResponse({ description: 'Invalid type' })
   @ApiOkResponse({ description: 'A new stream file' })
   @HttpCode(HttpStatus.OK)
+  @Header('Content-Type', 'audio/mp3')
   async getFile(
     @Query('type') type: string,
     @Query('name') name: string,
@@ -153,7 +161,7 @@ export class MusicController {
     }
 
     const stream = new StreamableFile(createReadStream(path), {
-      type: 'audio/mp3',
+      // type: 'audio/mp3',
       disposition: 'inline; filename="audio.mp3"',
     });
 

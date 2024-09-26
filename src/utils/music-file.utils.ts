@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { readdirSync } from 'fs';
-import { readFile } from 'fs/promises';
+import { readdir, readFile } from 'fs/promises';
+import getAudioDurationInSeconds from 'get-audio-duration';
 import { IMusicFile } from 'src/interfaces/imusic-file.interface';
 import { IMusicSingle } from 'src/interfaces/imusic-single.interface';
 import { MusicAlbumObject } from 'src/objects/music-album.object';
@@ -22,38 +22,69 @@ export class MusicFilesUtils {
 
     this.musics = new MusicObject();
     this.musics.assets = musicFile.assets;
-    this.musics.singles = musicFile.singles;
-    this.musics.albums = this.getAlbumObject(musicFile);
+    this.musics.singles = await this.formatSingle(musicFile);
+    this.musics.albums = await this.formatAlbum(musicFile);
 
     console.log(`Music database => ${JSON.stringify(this.musics)}`);
   }
 
-  getAlbumObject(
+  async formatAlbum(
     musicFile: IMusicFile<MusicFileAlbumObject, IMusicSingle>,
-  ): Array<MusicAlbumObject> {
-    return musicFile.albums.map((e) => {
-      const albumObject = new MusicAlbumObject();
-      albumObject.key = e.key;
-      albumObject.title = e.title;
-      albumObject.poster = e.poster;
-      albumObject.total = e.total;
+  ): Promise<Array<MusicAlbumObject>> {
+    const filteredAlbums = await Promise.all(
+      musicFile.albums.map(async (e) => {
+        const albumObject = new MusicAlbumObject();
+        albumObject.key = e.key;
+        albumObject.title = e.title;
+        albumObject.poster = e.poster;
+        albumObject.total = e.total;
 
-      const path = `${musicFile.assets.path}/${musicFile.assets.albums}/${e.key.toLowerCase()}`;
-      const albumFiles = readdirSync(path);
-      albumObject.tracks = albumFiles
-        .map((x, i) => {
-          if (x.includes('.mp3')) {
-            const title = x.substring(3).split('.')[0];
-            return {
-              title: title,
-              file: `${x}`,
-              index: i + 1,
-            };
-          }
-        })
-        .filter((e) => e != null);
+        const path = `${musicFile.assets.path}/${musicFile.assets.albums}/${e.key.toLowerCase()}`;
+        const albumFiles = await readdir(path);
+        albumObject.tracks = await this.formatTrack(path, albumFiles);
+        albumObject.tracks = albumObject.tracks.filter(
+          (track) => track !== null,
+        );
+        albumObject.duration = albumObject.tracks.reduce((total, track) => {
+          return total + Number(track.duration);
+        }, 0);
+        return albumObject;
+      }),
+    );
+    return filteredAlbums;
+  }
 
-      return albumObject;
-    });
+  async formatTrack(path: string, albums: string[]) {
+    const formatedTracks = Promise.all(
+      albums.map(async (x, i) => {
+        if (x.includes('.mp3')) {
+          const title = x.substring(3).split('.')[0];
+          const duration = await getAudioDurationInSeconds(`${path}/${x}`);
+          return {
+            title: title,
+            file: `${x}`,
+            duration: duration,
+            index: i + 1,
+          };
+        }
+
+        return null;
+      }),
+    );
+    return formatedTracks;
+  }
+
+  async formatSingle(
+    musicFile: IMusicFile<MusicFileAlbumObject, IMusicSingle>,
+  ): Promise<Array<IMusicSingle>> {
+    const formattedSingles = await Promise.all(
+      musicFile.singles.map(async (e) => {
+        const path = `${musicFile.assets.path}/${musicFile.assets.singles}/${e.key.toLowerCase()}/${e.tracks[0]}`;
+        const duration = await getAudioDurationInSeconds(path);
+        e.duration = duration;
+        return e;
+      }),
+    );
+    return formattedSingles;
   }
 }
