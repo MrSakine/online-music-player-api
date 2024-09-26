@@ -5,15 +5,9 @@ import { SwaggerModule } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { MusicFilesUtils } from './utils/music-file.utils';
-import { readFileSync } from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    httpsOptions: {
-      cert: readFileSync('./cert.pem'),
-      key: readFileSync('./key.pem'),
-    },
-  });
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
