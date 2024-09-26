@@ -3,4 +3,5 @@ export interface IMusicAlbum {
   title: string;
   poster: string;
   total: number;
+  duration: number;
 }

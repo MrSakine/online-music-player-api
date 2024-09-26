@@ -1,8 +1,8 @@
 {
   "assets": {
-    "path": "/Users/filymohamedsakine/Documents/alx/online-music-player-api",
-    "albums": "assets/albums",
-    "singles": "assets/singles"
+    "path": "assets",
+    "albums": "/albums",
+    "singles": "/singles"
   },
   "albums": [
     {

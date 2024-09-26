@@ -16,7 +16,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const musicFilesUtils = app.get(MusicFilesUtils);
 
-  await musicFilesUtils.load('./assets/musics.local.json');
+  await musicFilesUtils.load('./assets/musics.json');
 
   const port = configService.get<number>('PORT', 3000);
   const apiPrefix = configService.get<string>('API_PREFIX', 'api/v1');

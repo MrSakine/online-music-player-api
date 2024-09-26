@@ -7,7 +7,6 @@ import {
 import { AuthGuard } from 'src/guards/auth.guard';
 import { SignupService } from '../signup/signup.service';
 import { ResponseUtils } from 'src/utils/response.utils';
-import { UserInfo } from 'src/interfaces/iuser-info.interface';
 
 @Controller('profile')
 export class ProfileController {
@@ -24,14 +23,12 @@ export class ProfileController {
   @UseGuards(AuthGuard)
   @Get('')
   async getProfile(@Request() req: any) {
-    const user = await this.signupService.findByMail(req.user);
-    const data = {} as UserInfo;
-    data.fullname = user.fullname;
-    data.mail = user.mail;
+    const user = await this.signupService.findByMail(req.user.username);
+    const { fullname, mail } = user;
 
-    return this.responseUtils.dataResponse(
-      'User info fetched successfully',
-      data,
-    );
+    return this.responseUtils.dataResponse('User info fetched successfully', {
+      fullname,
+      mail,
+    });
   }
 }
