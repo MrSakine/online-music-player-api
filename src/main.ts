@@ -11,6 +11,10 @@ async function bootstrap() {
   app.enableCors({
     origin: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['Content-Range', 'X-Content-Range'],
+    credentials: true,
+    maxAge: 300,
   });
   const swaggerConfig = app.get(SwaggerConfig);
   const configService = app.get(ConfigService);
